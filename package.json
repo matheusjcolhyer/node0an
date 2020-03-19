@@ -1,0 +1,25 @@
+{
+  "name": "node0an",
+  "version": "1.0.0",
+  "description": "\"Generic rest typescript code\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheuscolhyer/node0an.git"
+  },
+  "author": "Matheus Colhyêr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matheuscolhyer/node0an/issues"
+  },
+  "homepage": "https://github.com/matheuscolhyer/node0an#readme",
+  "dependencies": {
+    "restify": "6.3.4"
+  },
+  "devDependencies": {
+    "@types/restify": "5.0.6"
+  }
+}
