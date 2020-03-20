@@ -1,13 +1,14 @@
-import { environment } from './../common/environment';
 import * as restify from 'restify'
+import { environment } from './../common/environment';
+import {Router} from '../common/router'
 
 export class Server{
 
     application: restify.Server
     
-    initRoutes(): 
+    initRoutes(routers: Router[]): 
         Promise<any>{
-            return new Promise((resolve,reject) =>{
+            return new Promise((resolve,reject) => {
                 try{
                     this.application = restify.createServer({
                         name: 'custommer-api',
@@ -16,34 +17,13 @@ export class Server{
                     this.application.use(restify.plugins.queryParser())
 
                     //routes
-                    this.application.get('/info',
-                    [
-                        (req,resp,next) => {
-                            if(req.userAgent() && req.userAgent().includes('MSIE 7.0')){
-                                let error: any = new Error()
-                                error.statusCode = 400
-                                error.message = 'Please update your browser'
-                                return next(false)
-                            }
-                            return next()
-                        }, 
-                        (req,resp,next) => {
-                            resp.status(200)
-                            resp.json({
-                                browser: req.userAgent,
-                                method: req.method,
-                                url: req.href(),
-                                path: req.path(),
-                            })
-                            return next()
-                        }
-                    ])
-
-
-
                     this.application.listen(environment.server.port,() => {
                         resolve(this.application)
                     })
+
+                    for(let router of routers){
+                        router.applyRoutes(this.application)
+                    }
                 }
                 catch(error){
                     reject(error)
@@ -51,9 +31,9 @@ export class Server{
             })
         }
 
-    bootstrap(): 
+    bootstrap(routers: Router[] = []): 
         Promise<Server>{
-            return this.initRoutes().then( () => this)
+            return this.initRoutes(routers).then( () => this)
         }
         
 } 
