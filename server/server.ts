@@ -1,8 +1,8 @@
+import { mergePatchBodyParser } from './merge-patch.parser';
 import * as restify from 'restify'
 import { environment } from './../common/environment';
 import {Router} from '../common/router'
 import * as mongoose from 'mongoose'
-
 
 
 export class Server{
@@ -26,7 +26,8 @@ export class Server{
                         version: '1.0.0'
                     })
                     this.application.use(restify.plugins.queryParser())
-
+                    this.application.use(restify.plugins.bodyParser())
+                    this.application.use(mergePatchBodyParser)
                     //routes
                     this.application.listen(environment.server.port,() => {
                         resolve(this.application)
