@@ -1,8 +1,10 @@
-import { mergePatchBodyParser } from './merge-patch.parser';
+import { mergePatchBodyParser } from './merge-patch.parser'
 import * as restify from 'restify'
-import { environment } from './../common/environment';
+import { environment } from './../common/environment'
 import {Router} from '../common/router'
 import * as mongoose from 'mongoose'
+import { handleError } from './error.handler'
+
 
 
 export class Server{
@@ -29,13 +31,17 @@ export class Server{
                     this.application.use(restify.plugins.bodyParser())
                     this.application.use(mergePatchBodyParser)
                     //routes
-                    this.application.listen(environment.server.port,() => {
-                        resolve(this.application)
-                    })
- 
+
                     for(let router of routers){ 
                         router.applyRoutes(this.application)
                     }
+
+                    this.application.listen(environment.server.port,() => {
+                        resolve(this.application)
+                    })
+                    
+                    this.application.on('restifyError', handleError)
+                   
                 }
                 catch(error){
                     reject(error)
